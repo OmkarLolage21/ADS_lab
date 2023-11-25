@@ -5,42 +5,32 @@
 struct TwoStacks
 {
     int arr[MAX_SIZE];
-    int top1; // Top pointer for Stack 1
-    int top2; // Top pointer for Stack 2
+    int top1;
+    int top2;
 };
 
-// Initialize two stacks
 void initialize(struct TwoStacks *stacks)
 {
-    stacks->top1 = -1;       // Initialize top pointer for Stack 1
-    stacks->top2 = MAX_SIZE; // Initialize top pointer for Stack 2
+    stacks->top1 = -1;
+    stacks->top2 = MAX_SIZE;
 }
 
-// Check if Stack 1 is full
 int isStack1Full(struct TwoStacks *stacks)
 {
     return stacks->top1 + 1 == stacks->top2;
 }
-
-// Check if Stack 2 is full
 int isStack2Full(struct TwoStacks *stacks)
 {
     return stacks->top2 - 1 == stacks->top1;
 }
-
-// Check if Stack 1 is empty
 int isStack1Empty(struct TwoStacks *stacks)
 {
     return stacks->top1 == -1;
 }
-
-// Check if Stack 2 is empty
 int isStack2Empty(struct TwoStacks *stacks)
 {
     return stacks->top2 == MAX_SIZE;
 }
-
-// Push an element to Stack 1
 void pushStack1(struct TwoStacks *stacks, int value)
 {
     if (isStack1Full(stacks))
@@ -53,7 +43,6 @@ void pushStack1(struct TwoStacks *stacks, int value)
     }
 }
 
-// Push an element to Stack 2
 void pushStack2(struct TwoStacks *stacks, int value)
 {
     if (isStack2Full(stacks))
@@ -66,7 +55,6 @@ void pushStack2(struct TwoStacks *stacks, int value)
     }
 }
 
-// Pop an element from Stack 1
 int popStack1(struct TwoStacks *stacks)
 {
     if (isStack1Empty(stacks))
@@ -80,7 +68,6 @@ int popStack1(struct TwoStacks *stacks)
     }
 }
 
-// Pop an element from Stack 2
 int popStack2(struct TwoStacks *stacks)
 {
     if (isStack2Empty(stacks))
@@ -94,7 +81,6 @@ int popStack2(struct TwoStacks *stacks)
     }
 }
 
-// Display Stack 1
 void displayStack1(struct TwoStacks *stacks)
 {
     printf("Stack 1: ");
@@ -105,7 +91,6 @@ void displayStack1(struct TwoStacks *stacks)
     printf("\n");
 }
 
-// Display Stack 2
 void displayStack2(struct TwoStacks *stacks)
 {
     printf("Stack 2: ");

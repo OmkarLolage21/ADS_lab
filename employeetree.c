@@ -1,17 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// Define the structure for an employee record
 struct Employee
 {
     int empId;
     char name[50];
-    // You can include other employee information here
     struct Employee *left;
     struct Employee *right;
 };
 
-// Function to create a new employee node
 struct Employee *createEmployee(int empId, const char *name)
 {
     struct Employee *newEmployee = (struct Employee *)malloc(sizeof(struct Employee));
@@ -22,7 +19,6 @@ struct Employee *createEmployee(int empId, const char *name)
     return newEmployee;
 }
 
-// Function to insert an employee into the BST
 struct Employee *insertEmployee(struct Employee *root, int empId, const char *name)
 {
     if (root == NULL)
@@ -40,7 +36,6 @@ struct Employee *insertEmployee(struct Employee *root, int empId, const char *na
     return root;
 }
 
-// Function to search for an employee by emp-id in the BST
 struct Employee *searchEmployee(struct Employee *root, int empId)
 {
     if (root == NULL || root->empId == empId)
@@ -54,7 +49,6 @@ struct Employee *searchEmployee(struct Employee *root, int empId)
     return searchEmployee(root->right, empId);
 }
 
-// Function to perform an in-order traversal to print employees in ascending order
 void printEmployeesAscending(struct Employee *root)
 {
     if (root != NULL)

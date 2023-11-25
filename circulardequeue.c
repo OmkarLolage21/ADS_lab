@@ -3,33 +3,25 @@
 
 #define MAX 5
 
-// Structure for Deque
 struct Deque
 {
     int arr[MAX];
     int front, rear;
 };
-
-// Function to initialize the deque
 void initialize(struct Deque *deque)
 {
     deque->front = -1;
     deque->rear = -1;
 }
-
-// Function to check if the deque is empty
 int isEmpty(struct Deque *deque)
 {
     return (deque->front == -1 && deque->rear == -1);
 }
-
-// Function to check if the deque is full
 int isFull(struct Deque *deque)
 {
     return (deque->front == (deque->rear + 1) % MAX);
 }
 
-// Function to add an element to the front of the deque
 void addToFront(struct Deque *deque, int value)
 {
     if (isFull(deque))
@@ -52,7 +44,6 @@ void addToFront(struct Deque *deque, int value)
     printf("Added %d to the front of the deque.\n", value);
 }
 
-// Function to add an element to the rear of the deque
 void addToRear(struct Deque *deque, int value)
 {
     if (isFull(deque))
@@ -75,7 +66,6 @@ void addToRear(struct Deque *deque, int value)
     printf("Added %d to the rear of the deque.\n", value);
 }
 
-// Function to remove an element from the front of the deque
 void removeFromFront(struct Deque *deque)
 {
     if (isEmpty(deque))
@@ -88,7 +78,6 @@ void removeFromFront(struct Deque *deque)
 
     if (deque->front == deque->rear)
     {
-        // If there was only one element in the deque
         initialize(deque);
     }
     else
@@ -98,8 +87,6 @@ void removeFromFront(struct Deque *deque)
 
     printf("Removed %d from the front of the deque.\n", removedValue);
 }
-
-// Function to remove an element from the rear of the deque
 void removeFromRear(struct Deque *deque)
 {
     if (isEmpty(deque))
@@ -112,7 +99,6 @@ void removeFromRear(struct Deque *deque)
 
     if (deque->front == deque->rear)
     {
-        // If there was only one element in the deque
         initialize(deque);
     }
     else
@@ -122,8 +108,6 @@ void removeFromRear(struct Deque *deque)
 
     printf("Removed %d from the rear of the deque.\n", removedValue);
 }
-
-// Function to display the elements of the deque
 void display(struct Deque *deque)
 {
     if (isEmpty(deque))

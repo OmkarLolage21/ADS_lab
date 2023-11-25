@@ -1,15 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-// Node structure for doubly linked list
 struct Node
 {
     int data;
     struct Node *prev;
     struct Node *next;
 };
-
-// Function to create a new node
 struct Node *createNode(int value)
 {
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
@@ -23,8 +19,6 @@ struct Node *createNode(int value)
     newNode->next = NULL;
     return newNode;
 }
-
-// Function to insert a node at the end of the doubly linked list
 void insertAtEnd(struct Node **head, int value)
 {
     struct Node *newNode = createNode(value);
@@ -43,8 +37,6 @@ void insertAtEnd(struct Node **head, int value)
         newNode->prev = temp;
     }
 }
-
-// Function to display the doubly linked list
 void display(struct Node *head)
 {
     printf("Doubly linked list: ");
@@ -55,8 +47,6 @@ void display(struct Node *head)
     }
     printf("\n");
 }
-
-// Function to merge two sorted doubly linked lists
 struct Node *mergeSortedLists(struct Node *list1, struct Node *list2)
 {
     struct Node *result = NULL;
@@ -95,8 +85,6 @@ struct Node *mergeSortedLists(struct Node *list1, struct Node *list2)
             list2 = list2->next;
         }
     }
-
-    // If there are remaining nodes in list1 or list2, add them to the result
     while (list1 != NULL)
     {
         temp->next = createNode(list1->data);
@@ -115,8 +103,6 @@ struct Node *mergeSortedLists(struct Node *list1, struct Node *list2)
 
     return result;
 }
-
-// Function to free memory allocated for the doubly linked list
 void freeList(struct Node **head)
 {
     struct Node *current = *head;
@@ -135,7 +121,6 @@ int main()
     struct Node *list2 = NULL;
     struct Node *mergedList = NULL;
 
-    // Populate sorted doubly linked lists
     insertAtEnd(&list1, 1);
     insertAtEnd(&list1, 3);
     insertAtEnd(&list1, 5);
@@ -143,20 +128,15 @@ int main()
     insertAtEnd(&list2, 2);
     insertAtEnd(&list2, 4);
     insertAtEnd(&list2, 6);
-
-    // Display original lists
     printf("List 1: ");
     display(list1);
 
     printf("List 2: ");
     display(list2);
-
-    // Merge and display the result
     mergedList = mergeSortedLists(list1, list2);
     printf("Merged List: ");
     display(mergedList);
 
-    // Free memory
     freeList(&list1);
     freeList(&list2);
     freeList(&mergedList);

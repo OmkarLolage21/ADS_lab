@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Structure representing a student
 struct Student
 {
     char student_name[50];
@@ -10,7 +9,6 @@ struct Student
     int total_marks;
 };
 
-// Function to perform heapify operation in Heap Sort
 void heapify(struct Student arr[], int n, int i, int *swapCount)
 {
     int largest = i;
@@ -29,41 +27,33 @@ void heapify(struct Student arr[], int n, int i, int *swapCount)
 
     if (largest != i)
     {
-        // Swap arr[i] and arr[largest]
         struct Student temp = arr[i];
         arr[i] = arr[largest];
         arr[largest] = temp;
         (*swapCount)++;
 
-        // Recursively heapify the affected sub-tree
         heapify(arr, n, largest, swapCount);
     }
 }
 
-// Function to perform Heap Sort on an array of students
 void heapSort(struct Student arr[], int n, int *swapCount)
 {
-    // Build max heap
     for (int i = n / 2 - 1; i >= 0; i--)
     {
         heapify(arr, n, i, swapCount);
     }
 
-    // Extract elements from the heap one by one
     for (int i = n - 1; i > 0; i--)
     {
-        // Swap the root (maximum element) with the last element
         struct Student temp = arr[0];
         arr[0] = arr[i];
         arr[i] = temp;
         (*swapCount)++;
 
-        // Heapify the reduced heap
         heapify(arr, i, 0, swapCount);
     }
 }
 
-// Function to partition the array for Quick Sort
 int partition(struct Student arr[], int low, int high, int *swapCount)
 {
     struct Student pivot = arr[high];
@@ -74,7 +64,6 @@ int partition(struct Student arr[], int low, int high, int *swapCount)
         if (arr[j].student_roll_no <= pivot.student_roll_no)
         {
             i++;
-            // Swap arr[i] and arr[j]
             struct Student temp = arr[i];
             arr[i] = arr[j];
             arr[j] = temp;
@@ -82,7 +71,6 @@ int partition(struct Student arr[], int low, int high, int *swapCount)
         }
     }
 
-    // Swap arr[i+1] and arr[high] (pivot)
     struct Student temp = arr[i + 1];
     arr[i + 1] = arr[high];
     arr[high] = temp;
@@ -91,21 +79,17 @@ int partition(struct Student arr[], int low, int high, int *swapCount)
     return i + 1;
 }
 
-// Function to perform Quick Sort on an array of students
 void quickSort(struct Student arr[], int low, int high, int *swapCount)
 {
     if (low < high)
     {
-        // Partition the array and get the pivot index
         int pi = partition(arr, low, high, swapCount);
 
-        // Recursively sort the elements before and after the pivot
         quickSort(arr, low, pi - 1, swapCount);
         quickSort(arr, pi + 1, high, swapCount);
     }
 }
 
-// Function to display the array of students
 void displayArray(struct Student arr[], int n)
 {
     printf("Roll No\t\tName\t\tTotal Marks\n");
@@ -135,7 +119,6 @@ int main()
         scanf("%d", &students[i].total_marks);
     }
 
-    // Make a copy of the original array for each sorting algorithm
     struct Student *heapSortArray = (struct Student *)malloc(n * sizeof(struct Student));
     struct Student *quickSortArray = (struct Student *)malloc(n * sizeof(struct Student));
     memcpy(heapSortArray, students, n * sizeof(struct Student));
@@ -144,13 +127,11 @@ int main()
     int heapSortSwapCount = 0;
     int quickSortSwapCount = 0;
 
-    // Perform Heap Sort
     heapSort(heapSortArray, n, &heapSortSwapCount);
     printf("\nSorted array using Heap Sort:\n");
     displayArray(heapSortArray, n);
     printf("Number of swaps in Heap Sort: %d\n", heapSortSwapCount);
 
-    // Perform Quick Sort
     quickSort(quickSortArray, 0, n - 1, &quickSortSwapCount);
     printf("\nSorted array using Quick Sort:\n");
     displayArray(quickSortArray, n);

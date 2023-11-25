@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Structure representing a student
 struct Student
 {
     char student_name[50];
@@ -10,7 +9,6 @@ struct Student
     int total_marks;
 };
 
-// Function to perform heapify operation in Heap Sort
 void heapify(struct Student arr[], int n, int i, int *swapCount)
 {
     int largest = i;
@@ -29,52 +27,41 @@ void heapify(struct Student arr[], int n, int i, int *swapCount)
 
     if (largest != i)
     {
-        // Swap arr[i] and arr[largest]
         struct Student temp = arr[i];
         arr[i] = arr[largest];
         arr[largest] = temp;
         (*swapCount)++;
 
-        // Recursively heapify the affected sub-tree
         heapify(arr, n, largest, swapCount);
     }
 }
-
-// Function to perform Heap Sort on an array of students
 void heapSort(struct Student arr[], int n, int *swapCount)
 {
-    // Build max heap
     for (int i = n / 2 - 1; i >= 0; i--)
     {
         heapify(arr, n, i, swapCount);
     }
 
-    // Extract elements from the heap one by one
     for (int i = n - 1; i > 0; i--)
     {
-        // Swap the root (maximum element) with the last element
         struct Student temp = arr[0];
         arr[0] = arr[i];
         arr[i] = temp;
         (*swapCount)++;
 
-        // Heapify the reduced heap
         heapify(arr, i, 0, swapCount);
     }
 }
 
-// Function to merge two subarrays in Merge Sort
 void merge(struct Student arr[], int left, int middle, int right, int *swapCount)
 {
     int i, j, k;
     int n1 = middle - left + 1;
     int n2 = right - middle;
 
-    // Create temporary arrays
     struct Student *leftArray = (struct Student *)malloc(n1 * sizeof(struct Student));
     struct Student *rightArray = (struct Student *)malloc(n2 * sizeof(struct Student));
 
-    // Copy data to temporary arrays leftArray[] and rightArray[]
     for (i = 0; i < n1; i++)
     {
         leftArray[i] = arr[left + i];
@@ -84,11 +71,9 @@ void merge(struct Student arr[], int left, int middle, int right, int *swapCount
         rightArray[j] = arr[middle + 1 + j];
     }
 
-    // Merge the temporary arrays back into arr[left..right]
-    i = 0;    // Initial index of first subarray
-    j = 0;    // Initial index of second subarray
-    k = left; // Initial index of merged subarray
-
+    i = 0;
+    j = 0;
+    k = left;
     while (i < n1 && j < n2)
     {
         if (leftArray[i].student_roll_no <= rightArray[j].student_roll_no)
@@ -100,12 +85,11 @@ void merge(struct Student arr[], int left, int middle, int right, int *swapCount
         {
             arr[k] = rightArray[j];
             j++;
-            (*swapCount) += (middle - left + 1 - i); // Count swaps for inversion count
+            (*swapCount) += (middle - left + 1 - i);
         }
         k++;
     }
 
-    // Copy the remaining elements of leftArray[], if there are any
     while (i < n1)
     {
         arr[k] = leftArray[i];
@@ -113,37 +97,26 @@ void merge(struct Student arr[], int left, int middle, int right, int *swapCount
         k++;
     }
 
-    // Copy the remaining elements of rightArray[], if there are any
     while (j < n2)
     {
         arr[k] = rightArray[j];
         j++;
         k++;
     }
-
-    // Free temporary arrays
     free(leftArray);
     free(rightArray);
 }
-
-// Function to perform Merge Sort on an array of students
 void mergeSort(struct Student arr[], int left, int right, int *swapCount)
 {
     if (left < right)
     {
-        // Same as (left + right) / 2, but avoids overflow for large left and right
         int middle = left + (right - left) / 2;
-
-        // Recursively sort first and second halves
         mergeSort(arr, left, middle, swapCount);
         mergeSort(arr, middle + 1, right, swapCount);
 
-        // Merge the sorted halves
         merge(arr, left, middle, right, swapCount);
     }
 }
-
-// Function to display the array of students
 void displayArray(struct Student arr[], int n)
 {
     printf("Roll No\t\tName\t\tTotal Marks\n");
@@ -173,7 +146,6 @@ int main()
         scanf("%d", &students[i].total_marks);
     }
 
-    // Make a copy of the original array for each sorting algorithm
     struct Student *heapSortArray = (struct Student *)malloc(n * sizeof(struct Student));
     struct Student *mergeSortArray = (struct Student *)malloc(n * sizeof(struct Student));
     memcpy(heapSortArray, students, n * sizeof(struct Student));
@@ -182,13 +154,11 @@ int main()
     int heapSortSwapCount = 0;
     int mergeSortSwapCount = 0;
 
-    // Perform Heap Sort
     heapSort(heapSortArray, n, &heapSortSwapCount);
     printf("\nSorted array using Heap Sort:\n");
     displayArray(heapSortArray, n);
     printf("Number of swaps in Heap Sort: %d\n", heapSortSwapCount);
 
-    // Perform Merge Sort
     mergeSort(mergeSortArray, 0, n - 1, &mergeSortSwapCount);
     printf("\nSorted array using Merge Sort:\n");
     displayArray(mergeSortArray, n);

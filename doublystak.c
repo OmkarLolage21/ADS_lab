@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Node structure for doubly linked list
 struct Node
 {
     int data;
@@ -9,13 +8,10 @@ struct Node
     struct Node *next;
 };
 
-// Structure for the stack
 struct Stack
 {
     struct Node *top;
 };
-
-// Function to create a new node
 struct Node *createNode(int value)
 {
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
@@ -29,20 +25,15 @@ struct Node *createNode(int value)
     newNode->next = NULL;
     return newNode;
 }
-
-// Function to initialize the stack
 void initializeStack(struct Stack *stack)
 {
     stack->top = NULL;
 }
-
-// Function to check if the stack is empty
 int isEmpty(struct Stack *stack)
 {
     return stack->top == NULL;
 }
 
-// Function to push an element onto the stack
 void push(struct Stack *stack, int value)
 {
     struct Node *newNode = createNode(value);
@@ -58,8 +49,6 @@ void push(struct Stack *stack, int value)
     }
     printf("Pushed %d onto the stack.\n", value);
 }
-
-// Function to pop an element from the stack
 int pop(struct Stack *stack)
 {
     if (isEmpty(stack))
@@ -83,7 +72,6 @@ int pop(struct Stack *stack)
     return poppedValue;
 }
 
-// Function to display the elements of the stack
 void displayStack(struct Stack *stack)
 {
     if (isEmpty(stack))
@@ -102,7 +90,6 @@ void displayStack(struct Stack *stack)
     printf("\n");
 }
 
-// Function to free memory allocated for the stack
 void freeStack(struct Stack *stack)
 {
     while (!isEmpty(stack))
@@ -116,22 +103,17 @@ int main()
     struct Stack stack;
     initializeStack(&stack);
 
-    // Push operations
     push(&stack, 10);
     push(&stack, 20);
     push(&stack, 30);
 
-    // Display the stack
     displayStack(&stack);
 
-    // Pop operations
     pop(&stack);
     pop(&stack);
 
-    // Display the stack after popping
     displayStack(&stack);
 
-    // Free memory
     freeStack(&stack);
 
     return 0;

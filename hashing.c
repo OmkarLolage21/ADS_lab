@@ -122,7 +122,8 @@ int main()
     initializeHashTable(&quadraticProbingTable);
     initializeHashTable(&doubleHashingTable);
 
-    int data[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    // int data[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    int data[] = {11, 21, 12, 31};
     int dataSize = sizeof(data) / sizeof(data[0]);
 
     // Insert data into hash tables using different probing techniques

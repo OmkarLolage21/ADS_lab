@@ -11,36 +11,34 @@ struct stack
     struct stack *next;
 };
 struct stack *top;
-int count = 0;
 void push(struct node *root, struct stack **top);
 struct node *pop(struct stack **top);
+int emptystack(struct stack *top);
 struct node *create(int data);
 struct node *insert(struct node *root, int data);
-int emptystack();
-int emptystacks(struct stack *top);
 void preorder(struct node *T);
 void inorder(struct node *T);
 void postorder(struct node *T);
-int findHeight(struct node *);
-void LevelDisplay(struct node *T);
+int findHeight(struct node *root);
 struct node *image(struct node *root);
+
 int findHeight(struct node *root)
 {
     if (root == NULL)
     {
         return 0;
     }
-    struct node *queue[30];
+    struct node *queue[20];
     int front = 0, rear = 0;
-    int currentLev = 1;
+    int currentlev = 1;
     int nextLev = 0;
     int height = 0;
     queue[rear++] = root;
     while (front < rear)
     {
         struct node *current = queue[front++];
-        printf("%d", current->data);
-        currentLev--;
+        printf("%d ", current->data);
+        currentlev--;
         if (current->left != NULL)
         {
             queue[rear++] = current->left;
@@ -51,11 +49,11 @@ int findHeight(struct node *root)
             queue[rear++] = current->right;
             nextLev++;
         }
-        if (currentLev == 0)
+        if (currentlev == 0)
         {
             printf("\n");
             height++;
-            currentLev = nextLev;
+            currentlev = nextLev;
             nextLev = 0;
         }
     }
@@ -63,7 +61,7 @@ int findHeight(struct node *root)
 }
 void preorder(struct node *T)
 {
-    while (T != NULL || !emptystack())
+    while (T != NULL || !emptystack(top))
     {
         while (T != NULL)
         {
@@ -71,8 +69,7 @@ void preorder(struct node *T)
             push(T, &top);
             T = T->left;
         }
-
-        if (!emptystack())
+        if (!emptystack(top))
         {
             T = pop(&top);
             T = T->right;
@@ -81,15 +78,14 @@ void preorder(struct node *T)
 }
 void inorder(struct node *T)
 {
-    while (T != NULL || !emptystack())
+    while (T != NULL || !emptystack(top))
     {
         while (T != NULL)
         {
             push(T, &top);
             T = T->left;
         }
-
-        if (!emptystack())
+        if (!emptystack(top))
         {
             T = pop(&top);
             printf("%d", T->data);
@@ -97,57 +93,9 @@ void inorder(struct node *T)
         }
     }
 }
-
-void postorder(struct node *T)
+int emptystack(struct stack *top)
 {
-    struct node *prev = NULL;
-    do
-    {
-        while (T != NULL)
-        {
-            push(T, &top);
-            T = T->left;
-        }
-
-        while (T == NULL && !emptystack())
-        {
-            T = top->T;
-            if (T->right == NULL || T->right == prev)
-            {
-                printf("%d", T->data);
-                prev = T;
-                pop(&top);
-                T = NULL;
-            }
-            else
-            {
-                T = T->right;
-            }
-        }
-
-    } while (!emptystack());
-}
-int main()
-{
-    struct node *root = NULL;
-    root = insert(root, 15);
-    root = insert(root, 10);
-    root = insert(root, 20);
-    // root = insert(root, 25);
-    // root = insert(root, 28);
-    // printf("\nPreorder Traversal : ");
-    // preorder(root);
-    printf("\nInorder Traversal : ");
-    inorder(root);
-    printf("\nPostorder Traversal : ");
-    postorder(root);
-    printf("\n");
-    int height = findHeight(root);
-    printf("\nHeight of the tree is %d", height);
-    printf("\nTotal number of nodes are %d", count);
-    root = image(root);
-    printf("\nAfter Image :\n ");
-    inorder(root);
+    return top == NULL;
 }
 void push(struct node *root, struct stack **top)
 {
@@ -167,28 +115,13 @@ struct node *pop(struct stack **top)
     }
     else
     {
+
         temp = *top;
         *top = temp->next;
         p = temp->T;
         free(temp);
         return p;
     }
-}
-int emptystack()
-{
-    return top == NULL;
-}
-int emptystacks(struct stack *top)
-{
-    return top == NULL;
-}
-struct node *create(int data)
-{
-    count += 1;
-    struct node *new = (struct node *)malloc(sizeof(struct node));
-    new->data = data;
-    new->left = new->right = NULL;
-    return new;
 }
 struct node *insert(struct node *root, int data)
 {
@@ -206,6 +139,65 @@ struct node *insert(struct node *root, int data)
     }
     return root;
 }
+struct node *create(int data)
+{
+    struct node *newnode = (struct node *)malloc(sizeof(struct node));
+    newnode->data = data;
+    newnode->left = newnode->right = NULL;
+    return newnode;
+}
+int main()
+{
+    struct node *root = NULL;
+    root = insert(root, 15);
+    root = insert(root, 10);
+    root = insert(root, 20);
+    // root = insert(root, 25);
+    // root = insert(root, 30);
+
+    // printf("Preorder : ");
+    // preorder(root);
+    // printf("\nInorder : ");
+    // inorder(root);
+    // printf("\nPostorder : ");
+    // postorder(root);
+    printf("\n");
+    int height = findHeight(root);
+    printf("Height of tree is %d\n\n", height);
+
+    root = image(root);
+    findHeight(root);
+    // inorder(root);
+    return 0;
+}
+void postorder(struct node *T)
+{
+    struct node *prev = NULL;
+    do
+    {
+        while (T != NULL)
+        {
+            push(T, &top);
+            T = T->left;
+        }
+        while (T == NULL && !emptystack(top))
+        {
+            T = top->T;
+            if (T->right == NULL || T->right == prev)
+            {
+                printf("%d", T->data);
+                prev = T;
+                pop(&top);
+                T = NULL;
+            }
+            else
+            {
+                T = T->right;
+            }
+        }
+
+    } while (!emptystack(top));
+}
 struct node *image(struct node *root)
 {
     if (root == NULL)
@@ -220,14 +212,14 @@ struct node *image(struct node *root)
         struct node *temp = current->left;
         current->left = current->right;
         current->right = temp;
-
         if (current->left)
+        {
             push(current->left, &s);
+        }
         if (current->right)
+        {
             push(current->right, &s);
-
-        if (s == NULL) // Update root if stack is empty
-            root = current;
+        }
     }
     return root;
 }

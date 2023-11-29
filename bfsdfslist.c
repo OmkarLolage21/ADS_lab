@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
-#define max 30
+#include <limits.h>
+#define max 15
 struct vertex
 {
     int data;
@@ -22,44 +22,60 @@ struct queue
 struct queue *front = NULL;
 struct queue *rear = NULL;
 void enqueue(int);
-int notemptyqueue();
-int dequeue();
-void push(int);
+int notemptyqueue(void);
+int dequeue(void);
+void push(int v);
 int pop();
 int notemptystack();
-void bfs(struct vertex[], int);
-void dfs(struct vertex[], int);
-
-void bfs(struct vertex graphl[], int n)
+void bfsl(struct vertex[], int);
+void dfsl(struct vertex[], int);
+int main()
 {
-    int visited[max];
-    for (int i = 0; i < n; i++)
-    {
-        visited[i] = 0;
-    }
     int v;
-    printf("Enter start vertex : ");
+    printf("Enter number of nodes: ");
     scanf("%d", &v);
-    visited[v] = 1;
+    struct vertex graphl[max];
+    for (int i = 0; i < v; i++)
+    {
+        graphl[i].data = i;
+        graphl[i].next = NULL;
+    }
+    int exit;
+    do
+    {
+        printf("Do you want to enter an edge (1: yes, 0: no): ");
+        scanf("%d", &exit);
+        if (exit)
+        {
+            int v1, v2;
+            printf("\nEnter the vertices of edge: ");
+            scanf("%d%d", &v1, &v2);
+            if ((v1 >= v) || (v2 >= v))
+            {
+                printf("\nError! number of nodes exceeded!");
+                continue;
+            }
+            insertl(v1, v2, graphl, v);
+        }
+    } while (exit);
+    printf("\nPerforming BFS using adjacency list");
+    bfsl(graphl, v);
+    printf("\n DFS : ");
+    dfsl(graphl, v);
+    return 0;
 }
-void push(int v)
+void insertl(int vertex1, int vertex2, struct vertex graph[], int n)
 {
-    struct stack *temp = (struct stack *)malloc(sizeof(struct stack));
-    temp->v = v;
-    temp->next = top;
-    top = temp;
-}
-int pop()
-{
-    struct stack *temp = top;
-    top = temp->next;
-    int n = temp->v;
-    free(temp);
-    return n;
-}
-int notemptystack()
-{
-    return top != NULL;
+    struct vertex *temp;
+    temp = (struct vertex *)malloc(sizeof(struct vertex));
+    temp->data = vertex2;
+    temp->next = graph[vertex1].next;
+    graph[vertex1].next = temp;
+
+    temp = (struct vertex *)malloc(sizeof(struct vertex));
+    temp->data = vertex1;
+    temp->next = graph[vertex2].next;
+    graph[vertex2].next = temp;
 }
 void enqueue(int v)
 {
@@ -77,11 +93,11 @@ void enqueue(int v)
         rear = temp;
     }
 }
-int notemptyqueue()
+int notemptyqueue(void)
 {
     return ((front != NULL) && (rear != NULL));
 }
-int dequeue()
+int dequeue(void)
 {
     if (front != NULL)
     {
@@ -96,51 +112,86 @@ int dequeue()
         return temp;
     }
 }
-int main()
+void bfsl(struct vertex graph[], int n)
 {
-    int v;
-    printf("Enter the number of vertices : ");
-    scanf("%d", &v);
-    struct vertex graphl[max];
-    for (int i = 0; i < v; i++)
+    int visited[max];
+    for (int i = 0; i < n; i++)
     {
-        graphl[i].data = i;
-        graphl[i].next = NULL;
+        visited[i] = 0;
     }
-    int exit;
-    do
+    int v;
+    printf("Enter start vertex : ");
+    scanf("%d", &v);
+    visited[v] = 1;
+    enqueue(v);
+    while (notemptyqueue())
     {
-        int exit;
-        printf("Do you want to enter an edge (1:Yes 0:No) : ");
-        scanf("%d", &exit);
-        if (exit)
+        v = dequeue();
+        printf("%d", v);
+        struct vertex temp = graph[v];
+        struct vertex *p = temp.next;
+        while (p != NULL)
         {
-            int v1, v2;
-            printf("Enter vertices of edge :");
-            scanf("%d%d", &v1, &v2);
-            if (v1 >= v || v2 >= v)
+            if (visited[p->data] == 0)
             {
-                printf("\nError! number of nodes exceeded!");
-                continue;
+                enqueue(p->data);
+                visited[p->data] = 1;
             }
-            insertl(v1, v2, graphl, v);
+            p = p->next;
         }
-
-    } while (exit);
-    printf("\nPerforming BFS using adjacency list");
-    bfsl(graphl, v);
-    printf("\n DFS : ");
-    dfsl(graphl, v);
-    return 0;
+    }
 }
-void insertl(int v1, int v2, struct vertex graphl[], int v)
+void dfsl(struct vertex graph[], int n)
 {
-    struct vertex *temp = (struct vertex *)malloc(sizeof(struct vertex));
-    temp->data = v2;
-    temp->next = graphl[v1].next;
-    graphl[v1].next = temp;
-    temp = (struct vertex *)malloc(sizeof(struct vertex));
-    temp->data = v1;
-    temp->next = graphl[v2].next;
-    graphl[v2].next = temp;
+    int visited[max];
+    struct vertex *p;
+
+    for (int i = 0; i < n; i++)
+    {
+        visited[i] = 0;
+    }
+
+    int v;
+    printf("Enter start vertex : ");
+    scanf("%d", &v);
+
+    push(v);
+    visited[v] = 1;
+
+    while (notemptystack())
+    {
+        v = pop();
+        printf("%d ", v);
+
+        p = graph[v].next;
+        while (p != NULL)
+        {
+            if (visited[p->data] == 0)
+            {
+                push(p->data);
+                visited[p->data] = 1;
+            }
+            p = p->next;
+        }
+    }
+}
+void push(int v)
+{
+    struct stack *temp;
+    temp = (struct stack *)malloc(sizeof(struct stack));
+    temp->v = v;
+    temp->next = top;
+    top = temp;
+}
+int pop()
+{
+    struct stack *temp = top;
+    top = top->next;
+    int n = temp->v;
+    free(temp);
+    return n;
+}
+int notemptystack()
+{
+    return (top != NULL);
 }

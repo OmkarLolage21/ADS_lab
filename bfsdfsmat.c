@@ -1,203 +1,165 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#define max 15
-struct vertex
-{
-    int data;
-    struct vertex *next;
-};
+#define max 100
 struct stack
 {
     int v;
     struct stack *next;
 };
 struct stack *top = NULL;
-void insertl(int, int, struct vertex[], int);
-struct queue
-{
-    int v;
-    struct queue *next;
-};
-struct queue *front = NULL;
-struct queue *rear = NULL;
-void enqueue(int);
-int notemptyqueue(void);
-int dequeue(void);
-void push(int v);
-int pop();
-int notemptystack();
-void bfsl(struct vertex[], int);
-void dfsl(struct vertex[], int);
+int adj[max][max];
+int n;
+void BFS(int G[][max], int n);
+void enqueue(int v);
+int dequeue();
+int emptyqueue();
+int front = -1;
+int rear = -1;
+int queue[100];
+void push(int);
+int pop(void);
+int notemptystack(void);
+void dfsm(int n, int G[][max]);
 int main()
 {
-    int v;
-    printf("Enter number of nodes: ");
-    scanf("%d", &v);
-    struct vertex graphl[max];
-    for (int i = 0; i < v; i++)
+    int maxE, i, j, origin, destin, ch;
+    printf("Enter number of vertices : ");
+    scanf("%d", &n);
+    maxE = n * (n - 1) / 2;
+    for (i = 1; i <= maxE; i++)
     {
-        graphl[i].data = i;
-        graphl[i].next = NULL;
-    }
-    int exit;
-    do
-    {
-        printf("Do you want to enter an edge (1: yes, 0: no): ");
-        scanf("%d", &exit);
-        if (exit)
+        printf("\nEnter Edge [ %d ] (-1 -1 to quit) : ", i);
+        scanf("%d %d", &origin, &destin);
+        if (origin == -1 && destin == -1)
         {
-            int v1, v2;
-            printf("\nEnter the vertices of edge: ");
-            scanf("%d%d", &v1, &v2);
-            if ((v1 >= v) || (v2 >= v))
-            {
-                printf("\nError! number of nodes exceeded!");
-                continue;
-            }
-            insertl(v1, v2, graphl, v);
+            break;
         }
-    } while (exit);
-    printf("\nPerforming BFS using adjacency list");
-    bfsl(graphl, v);
+        if (origin >= n || origin < 0 || destin >= n || destin < 0)
+        {
+            printf("\nInvalid vertex");
+            i--;
+        }
+        else
+        {
+            adj[origin][destin] = 1;
+            adj[destin][origin] = 1;
+        }
+    }
+    printf("\n BFS : ");
+    BFS(adj, n);
     printf("\n DFS : ");
-    dfsl(graphl, v);
-    return 0;
+    dfsm(n, adj);
 }
-void insertl(int vertex1, int vertex2, struct vertex graph[], int n)
+void BFS(int G[][max], int n)
 {
-    struct vertex *temp;
-    temp = (struct vertex *)malloc(sizeof(struct vertex));
-    temp->data = vertex2;
-    temp->next = graph[vertex1].next;
-    graph[vertex1].next = temp;
-    // struct vertex *temp;
-    temp = (struct vertex *)malloc(sizeof(struct vertex));
-    temp->data = vertex1;
-    temp->next = graph[vertex2].next;
-    graph[vertex2].next = temp;
-}
-void enqueue(int v)
-{
-    struct queue *temp = (struct queue *)malloc(sizeof(struct queue));
-    temp->v = v;
-    temp->next = NULL;
-    if (notemptyqueue() == 0)
+    int vis[10], v, i;
+    for (i = 0; i < n; i++)
     {
-        rear = temp;
-        front = temp;
+        vis[i] = 0;
     }
-    else
-    {
-        rear->next = temp;
-        rear = temp;
-    }
-}
-int notemptyqueue(void)
-{
-    return ((front != NULL) && (rear != NULL));
-}
-int dequeue(void)
-{
-    if (front != NULL)
-    {
-        int temp = front->v;
-        struct queue *t = front;
-        front = front->next;
-        if (t == rear)
-        {
-            rear = NULL;
-        }
-        free(t);
-        return temp;
-    }
-}
-void bfsl(struct vertex graph[], int n)
-{
-    int visited[max];
-    for (int i = 0; i < n; i++)
-    {
-        visited[i] = 0;
-    }
-    int v;
-    printf("Enter start vertex : ");
+    printf("\nEnter Start vertex : ");
     scanf("%d", &v);
-    visited[v] = 1;
+    vis[v] = 1;
     enqueue(v);
-    while (notemptyqueue())
+    while (!emptyqueue())
     {
         v = dequeue();
         printf("%d", v);
-        struct vertex temp = graph[v];
-        struct vertex *p = temp.next;
-        while (p != NULL)
+        for (i = 0; i < n; i++)
         {
-            if (visited[p->data] == 0)
+            if (vis[i] == 0 && G[v][i] == 1)
             {
-                enqueue(p->data);
-                visited[p->data] = 1;
+                enqueue(i);
+                vis[i] = 1;
             }
-            p = p->next;
         }
     }
 }
-void dfsl(struct vertex graph[], int n)
+void dfsm(int n, int G[][max])
 {
-    int visited[max];
-    struct vertex *p;
+    int visited[10];
     for (int i = 0; i < n; i++)
     {
         visited[i] = 0;
     }
+
     int v;
-    printf("Enter start vertex : ");
+    printf("\nEnter start vertex: ");
     scanf("%d", &v);
+
     push(v);
-    visited[v] = 1;
-    printf("%d", v);
-    do
+
+    while (notemptystack())
     {
-        p = graph[v].next;
-        while (p != NULL)
+        v = top->v;
+        pop();
+
+        if (!visited[v])
         {
-            if (visited[p->data] == 0)
+            printf("%d-", v);
+            visited[v] = 1;
+        }
+
+        for (int i = n - 1; i >= 0; i--)
+        {
+            if (G[v][i] && !visited[i])
             {
-                printf("%d", p->data);
-                push(p->data);
-                visited[p->data] = 1;
-                v = p->data;
-                break;
-            }
-            else
-            {
-                p = p->next;
+                push(i);
             }
         }
-        if (p == NULL)
-        {
-            pop();
-            if (notemptystack())
-                v = top->v;
-        }
-    } while (notemptystack());
+    }
 }
-void push(int v)
+
+void enqueue(int v)
+{
+    if (rear == -1 && front == -1)
+    {
+        rear = front = 0;
+    }
+    else
+    {
+        rear = rear + 1;
+    }
+    queue[rear] = v;
+}
+int dequeue()
+{
+    // printf("I am in deque");
+    int current_vertex = queue[front];
+    front += 1;
+    // printf("%d ", current_vertex);
+    return current_vertex;
+}
+int emptyqueue()
+{
+    if (front == -1 || front > rear)
+    {
+        return 1;
+    }
+    else
+    {
+        // printf("I am in returning true");
+        return 0;
+    }
+}
+int notemptystack(void)
+{
+    return (top != NULL);
+}
+void push(int n)
 {
     struct stack *temp;
     temp = (struct stack *)malloc(sizeof(struct stack));
-    temp->v = v;
+    temp->v = n;
     temp->next = top;
     top = temp;
 }
-int pop()
+int pop(void)
 {
     struct stack *temp = top;
-    top = top->next;
+    top = temp->next;
     int n = temp->v;
     free(temp);
     return n;
-}
-int notemptystack()
-{
-    return (top != NULL);
 }

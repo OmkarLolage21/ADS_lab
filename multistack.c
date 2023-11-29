@@ -60,7 +60,7 @@ int popStack1(struct TwoStacks *stacks)
     if (isStack1Empty(stacks))
     {
         printf("Stack 1 is empty. Cannot pop.\n");
-        return -1; // Indicates an error
+        return -1;
     }
     else
     {
@@ -73,11 +73,11 @@ int popStack2(struct TwoStacks *stacks)
     if (isStack2Empty(stacks))
     {
         printf("Stack 2 is empty. Cannot pop.\n");
-        return -1; // Indicates an error
+        return -1;
     }
     else
     {
-        return stacks->arr[stacks->top2--];
+        return stacks->arr[stacks->top2++];
     }
 }
 

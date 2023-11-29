@@ -65,7 +65,7 @@ int findHeight(struct node *root)
     while (front < rear)
     {
         struct node *current = queue[front++];
-        printf("%d", current->data);
+        printf("%d ", current->data);
         currentLev--;
         if (current->left != NULL)
         {
